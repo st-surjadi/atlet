@@ -229,7 +229,7 @@ EOF
 - Create: `src/screens/CameraPreviewScreen.tsx`
 - Modify: `App.tsx`
 
-- [ ] **Step 1: Write the failing test for the device-check helper**
+- [ ] **Step 1: Write the test for the device-check helper**
 
 Create `src/camera/__tests__/hasUsableCameraDevice.test.ts`:
 
@@ -249,15 +249,7 @@ describe('hasUsableCameraDevice', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test to see it fail**
-
-Run:
-```bash
-cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx jest src/camera/__tests__/hasUsableCameraDevice.test.ts
-```
-Expected: FAIL — `Cannot find module '../hasUsableCameraDevice'`.
-
-- [ ] **Step 3: Write the helper**
+- [ ] **Step 2: Write the helper**
 
 Create `src/camera/hasUsableCameraDevice.ts`:
 
@@ -271,7 +263,7 @@ export function hasUsableCameraDevice(
 }
 ```
 
-- [ ] **Step 4: Run the test to see it pass**
+- [ ] **Step 3: Run the test once to confirm it passes**
 
 Run:
 ```bash
@@ -279,7 +271,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx jest sr
 ```
 Expected: PASS, 2 tests passed.
 
-- [ ] **Step 5: Build the camera preview screen**
+- [ ] **Step 4: Build the camera preview screen**
 
 Create `src/screens/CameraPreviewScreen.tsx`:
 
@@ -345,7 +337,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 6: Wire it into `App.tsx`**
+- [ ] **Step 5: Wire it into `App.tsx`**
 
 Replace the full contents of `App.tsx` with:
 
@@ -373,7 +365,7 @@ const styles = StyleSheet.create({
 export default App;
 ```
 
-- [ ] **Step 7: Verify the app still builds in the Simulator**
+- [ ] **Step 6: Verify the app still builds in the Simulator**
 
 Run:
 ```bash
@@ -381,7 +373,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx react-n
 ```
 Expected: builds without error. The Simulator will show the "needs camera access" or "no back camera found" message — this is correct, since the Simulator has no camera hardware. The real preview is checked on a physical device in Task 5.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
