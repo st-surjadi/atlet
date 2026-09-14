@@ -35,6 +35,105 @@ Same as the project-foundation plan: the Simulator cannot show a live camera fee
 
 ---
 
+### Task 0: Downgrade React Native to 0.86.3
+
+**Why this task exists:** Task 1 was first attempted against React Native 0.87.1 (what the original project-foundation plan's CLI scaffold pulled in as "latest" at the time). `npx install-expo-modules@latest` failed outright with `Unable to find compatible Expo SDK version - reactNativeVersion[0.87.1]` — confirmed against Expo's own changelog, the latest stable Expo SDK (57) ships React Native 0.86, one minor version behind our project. This task re-pins the project to React Native 0.86.3 (latest 0.86.x patch, confirmed via `npm view react-native versions`) so Task 1 can succeed, then re-verifies everything still works — including on the real iPhone, since this touches the whole native scaffold.
+
+**Files:**
+- Effectively replaces: `package.json`, `package-lock.json`, `ios/`, `android/`, `babel.config.js`, `metro.config.js`, `tsconfig.json`, `.gitignore`, `Gemfile`, `Gemfile.lock`, `app.json` (regenerated from a fresh RN 0.86.3 template, then our own settings re-applied)
+- Preserved as-is: `App.tsx`, `src/`, `docs/`, `.git`
+
+- [ ] **Step 1: Scaffold a fresh RN 0.86.3 TypeScript app in a temp folder**
+
+Run:
+```bash
+rm -rf /tmp/atlet-rn86-scaffold && mkdir -p /tmp/atlet-rn86-scaffold && cd /tmp/atlet-rn86-scaffold && npx @react-native-community/cli@latest init Atlet --version 0.86.3 --pm npm --skip-git-init
+```
+Expected: a new `/tmp/atlet-rn86-scaffold/Atlet/` folder, with `package.json` showing `"react-native": "0.86.3"`.
+
+- [ ] **Step 2: Copy the scaffold in, preserving our own app code and docs**
+
+Run:
+```bash
+rsync -a --exclude='.git' --exclude='node_modules' --exclude='docs' --exclude='src' --exclude='App.tsx' /tmp/atlet-rn86-scaffold/Atlet/ /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet/
+```
+Expected: `App.tsx`, `src/`, and `docs/` are untouched (still our own code); everything else (`package.json`, `ios/`, `android/`, etc.) is now the fresh 0.86.3 scaffold.
+
+- [ ] **Step 3: Re-apply our own project settings**
+
+Re-do the same edits as the original project-foundation plan's Tasks 2 and 3, against this fresh scaffold:
+1. Bundle identifier: replace `PRODUCT_BUNDLE_IDENTIFIER` values in `ios/Atlet.xcodeproj/project.pbxproj` with `com.stsurjadi.atlet` (same `sed` approach as before — find current value with `grep`, replace with `sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = [^;]*;/PRODUCT_BUNDLE_IDENTIFIER = com.stsurjadi.atlet;/g' ios/Atlet.xcodeproj/project.pbxproj`, confirm with `grep -c`).
+2. Development team: add `DEVELOPMENT_TEAM = J233JFP2K3;` next to each `PRODUCT_BUNDLE_IDENTIFIER` line in the same file (so the app can install straight to the already-trusted iPhone without a Xcode GUI step this time). Check it's not already present before adding.
+3. iOS deployment target: `grep "IPHONEOS_DEPLOYMENT_TARGET" ios/Atlet.xcodeproj/project.pbxproj` — if any value is below 13.4 (react-native-vision-camera's minimum), bump it to 13.4 with `sed`, same as before.
+4. Install the camera library: `npm install react-native-vision-camera@^4.0.0`.
+5. Camera permission string: add to `ios/Atlet/Info.plist`, just before the closing `</dict>`:
+```xml
+	<key>NSCameraUsageDescription</key>
+	<string>Atlet uses the camera to track your shots live.</string>
+```
+6. Do NOT re-add `NSLocationWhenInUseUsageDescription` — we removed that empty, unused key on purpose in the last plan.
+
+- [ ] **Step 4: Install dependencies and pods**
+
+Run:
+```bash
+cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npm install
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+cd ios && bundle install && bundle exec pod install
+```
+Expected: both complete without error; "Pod installation complete!" for the pods step.
+
+- [ ] **Step 5: Verify the Simulator build**
+
+Run:
+```bash
+cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx react-native run-ios
+```
+Expected: builds and launches, showing the camera-permission fallback message (same as always on the Simulator).
+
+- [ ] **Step 6: Verify tests, types, and lint**
+
+Run:
+```bash
+npx jest
+npx tsc --noEmit
+npx eslint src App.tsx
+```
+Expected: all three pass clean, same as before this change (our test/source files didn't change, only the RN version underneath them).
+
+- [ ] **Step 7: Clean up the temp scaffold folder**
+
+Run:
+```bash
+rm -rf /tmp/atlet-rn86-scaffold
+```
+
+- [ ] **Step 8: Commit**
+
+```bash
+cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
+git add -A
+git commit -m "$(cat <<'EOF'
+Downgrade React Native to 0.86.3 for Expo compatibility
+
+install-expo-modules could not find an Expo SDK release matching our
+previous React Native version (0.87.1). I re-scaffolded on React
+Native 0.86.3, the latest patch the current Expo SDK supports, and
+re-applied our bundle id, signing team, deployment target, and camera
+permission settings. App code did not change.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Y9MLKFVRZatQLK63yFWhRW
+EOF
+)"
+```
+
+- [ ] **Step 9: Real-device verification (do not skip — report back to the controlling session for this step, do not self-certify)**
+
+This step needs the project owner's phone and their visual confirmation, same as the original plan's Task 5. Report status back to the controller instead of attempting this alone if you are a subagent without a way to interact with the user directly.
+
+---
+
 ### Task 1: Add Expo modules to the existing bare project
 
 **Files:**
