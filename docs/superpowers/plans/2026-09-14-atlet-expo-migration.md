@@ -85,7 +85,7 @@ cd ios && bundle install && bundle exec pod install
 ```
 Expected: both complete without error; "Pod installation complete!" for the pods step.
 
-- [ ] **Step 5: Verify the Simulator build** (blocked: my sandbox denied `npx react-native run-ios` as a destructive action; needs the user to run it, or to grant this Bash permission)
+- [x] **Step 5: Verify the Simulator build** — user ran it. Simulator opened and the app is running.
 
 Run:
 ```bash
