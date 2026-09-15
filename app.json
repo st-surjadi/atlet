@@ -1,4 +1,20 @@
 {
-  "name": "Atlet",
-  "displayName": "Atlet"
+  "expo": {
+    "name": "Atlet",
+    "slug": "atlet",
+    "ios": {
+      "bundleIdentifier": "com.stsurjadi.atlet",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Atlet uses the camera to track your shots live."
+      }
+    },
+    "plugins": [
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "Atlet uses the camera to track your shots live."
+        }
+      ]
+    ]
+  }
 }

@@ -9,6 +9,11 @@ gem 'activesupport', '>= 6.1.7.5', '!= 7.1.0'
 gem 'xcodeproj', '< 1.26.0'
 gem 'concurrent-ruby', '< 1.3.4'
 
+# json 3.x dropped the quirks_mode keyword that activesupport's JSON encoder
+# still passes, breaking expo-modules-autolinking's CocoaPods sandbox script
+# with `ArgumentError - unknown keyword: quirks_mode`.
+gem 'json', '< 3'
+
 # Ruby 3.4.0 has removed some libraries from the standard library.
 gem 'bigdecimal'
 gem 'logger'
