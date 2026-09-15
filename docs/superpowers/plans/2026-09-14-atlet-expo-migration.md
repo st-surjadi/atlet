@@ -211,7 +211,7 @@ EOF
 - Create: `app.json`
 - Modify: `ios/Atlet.xcodeproj/project.pbxproj` (via `npx expo prebuild`, applying `app.json`)
 
-- [ ] **Step 1: Find the vision-camera Expo plugin's real, current options**
+- [x] **Step 1: Find the vision-camera Expo plugin's real, current options** — found `src/expo-plugin/withVisionCamera.ts`; real option keys are `cameraPermissionText`, `enableMicrophonePermission`, `microphonePermissionText`, `enableLocation`, `locationPermissionText`, `enableFrameProcessors`, `enableCodeScanner`. Used only `cameraPermissionText`.
 
 Run:
 ```bash
@@ -222,7 +222,7 @@ cat node_modules/react-native-vision-camera/README.md | grep -A 30 -i "expo"
 ```
 Read what these show about the plugin's actual current config keys (e.g. `cameraPermissionText`, `enableMicrophonePermission`). Use exactly what you find here — not a remembered or assumed schema — in Step 2. If the installed version has no plugin file at all (some older versions rely only on manually setting `ios.infoPlist` yourself, with no dedicated plugin), that's fine — skip adding it to `plugins` and rely on `ios.infoPlist` alone, per Step 2.
 
-- [ ] **Step 2: Create `app.json`**
+- [x] **Step 2: Create `app.json`**
 
 Create `app.json` with this base shape — adjust the `plugins` array based on what Step 1 found (omit the `react-native-vision-camera` plugin entry entirely if Step 1 found no plugin file; otherwise add it with the real option keys you found, keeping our own permission string as the value):
 
@@ -242,7 +242,7 @@ Create `app.json` with this base shape — adjust the `plugins` array based on w
 }
 ```
 
-- [ ] **Step 3: Apply the config to the native project**
+- [x] **Step 3: Apply the config to the native project** — first attempt failed: `expo prebuild` requires `ios/Atlet/Supporting/Expo.plist` to already exist when adapting a bare project in place, but `install-expo-modules` never creates it. Created a minimal empty plist; prebuild then succeeded and filled it in.
 
 Run:
 ```bash
@@ -250,7 +250,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx expo pr
 ```
 Expected: completes without deleting the `ios/` folder wholesale (it should report which files it modified). If it asks an interactive question you're unsure how to answer, stop and report NEEDS_CONTEXT rather than guessing.
 
-- [ ] **Step 4: Check the bundle identifier and camera permission string survived**
+- [x] **Step 4: Check the bundle identifier and camera permission string survived**
 
 Run:
 ```bash
@@ -259,7 +259,7 @@ grep -A 1 "NSCameraUsageDescription" ios/Atlet/Info.plist
 ```
 Expected: bundle id is still `com.stsurjadi.atlet` in all build configs; the camera permission string is still present with our exact text.
 
-- [ ] **Step 5: Re-install pods and rebuild for the Simulator**
+- [x] **Step 5: Re-install pods and rebuild for the Simulator** — pod install first failed with `ArgumentError - unknown keyword: quirks_mode` (json 3.x / activesupport incompatibility on Ruby 3.4, hit inside expo-modules-autolinking's sandbox script). Fixed by pinning `gem 'json', '< 3'` in the Gemfile. Simulator build confirmed working after.
 
 Run:
 ```bash
@@ -268,7 +268,7 @@ cd ios && bundle exec pod install && cd .. && npx react-native run-ios
 ```
 Expected: builds and launches, same fallback message as before.
 
-- [ ] **Step 6: Re-verify signing and run on the real iPhone**
+- [x] **Step 6: Re-verify signing and run on the real iPhone** — DEVELOPMENT_TEAM survived prebuild, no manual Xcode step needed. Live camera feed confirmed working on the real iPhone.
 
 `npx expo prebuild` may have reset the Xcode signing Team (the same thing happened once before during the original setup). Check first:
 ```bash
@@ -282,7 +282,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx react-n
 ```
 Expected: installs and launches on the real iPhone, showing the same live camera feed as before this migration. This is the key regression check for this whole plan — if this doesn't work, the migration is not done, regardless of what else passed.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
@@ -307,7 +307,7 @@ EOF
 **Files:**
 - Modify: `jest.config.js` (only if needed — checked, not assumed)
 
-- [ ] **Step 1: Run the existing checks**
+- [x] **Step 1: Run the existing checks**
 
 Run:
 ```bash
@@ -317,7 +317,7 @@ npx tsc --noEmit
 npx eslint src App.tsx
 ```
 
-- [ ] **Step 2: If Jest fails to run (not just a failing test, but a config/transform error)**
+- [x] **Step 2: If Jest fails to run (not just a failing test, but a config/transform error)** — not needed; Jest ran fine on the existing `react-native` preset.
 
 This can happen because `install-expo-modules` switched `babel.config.js` to `babel-preset-expo`, and the existing `jest.config.js` may still assume the plain `react-native` Jest preset. If so, read `node_modules/jest-expo/jest-preset.js` exists first:
 ```bash
@@ -325,11 +325,11 @@ ls node_modules/jest-expo 2>&1
 ```
 If `jest-expo` is already installed (it's commonly pulled in as a dependency of Expo tooling), update `jest.config.js`'s `preset` field from `"react-native"` to `"jest-expo"`, then re-run `npx jest`. If `jest-expo` is not installed and Jest still fails, report BLOCKED with the exact error rather than installing an unplanned new dependency on your own judgment.
 
-- [ ] **Step 3: Confirm all three checks are clean**
+- [x] **Step 3: Confirm all three checks are clean** — jest 2/2, tsc clean, eslint clean.
 
 Expected: `npx jest` — 2/2 tests pass. `npx tsc --noEmit` — no errors. `npx eslint src App.tsx` — no errors.
 
-- [ ] **Step 4: Commit (only if Step 2 required a change; otherwise skip this commit)**
+- [x] **Step 4: Commit (only if Step 2 required a change; otherwise skip this commit)** — skipped, no jest.config.js change needed.
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
