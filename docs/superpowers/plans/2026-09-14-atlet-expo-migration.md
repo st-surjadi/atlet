@@ -43,7 +43,7 @@ Same as the project-foundation plan: the Simulator cannot show a live camera fee
 - Effectively replaces: `package.json`, `package-lock.json`, `ios/`, `android/`, `babel.config.js`, `metro.config.js`, `tsconfig.json`, `.gitignore`, `Gemfile`, `Gemfile.lock`, `app.json` (regenerated from a fresh RN 0.86.3 template, then our own settings re-applied)
 - Preserved as-is: `App.tsx`, `src/`, `docs/`, `.git`
 
-- [ ] **Step 1: Scaffold a fresh RN 0.86.3 TypeScript app in a temp folder**
+- [x] **Step 1: Scaffold a fresh RN 0.86.3 TypeScript app in a temp folder**
 
 Run:
 ```bash
@@ -51,7 +51,9 @@ rm -rf /tmp/atlet-rn86-scaffold && mkdir -p /tmp/atlet-rn86-scaffold && cd /tmp/
 ```
 Expected: a new `/tmp/atlet-rn86-scaffold/Atlet/` folder, with `package.json` showing `"react-native": "0.86.3"`.
 
-- [ ] **Step 2: Copy the scaffold in, preserving our own app code and docs**
+- [x] **Step 2: Copy the scaffold in, preserving our own app code and docs**
+
+Note: the rsync exclude list did not exclude `__tests__/`, so the stock template test `__tests__/App.test.tsx` came back. It failed under Jest (no native camera module in the test environment), the same failure we already resolved once before. I deleted it again.
 
 Run:
 ```bash
@@ -59,7 +61,7 @@ rsync -a --exclude='.git' --exclude='node_modules' --exclude='docs' --exclude='s
 ```
 Expected: `App.tsx`, `src/`, and `docs/` are untouched (still our own code); everything else (`package.json`, `ios/`, `android/`, etc.) is now the fresh 0.86.3 scaffold.
 
-- [ ] **Step 3: Re-apply our own project settings**
+- [x] **Step 3: Re-apply our own project settings**
 
 Re-do the same edits as the original project-foundation plan's Tasks 2 and 3, against this fresh scaffold:
 1. Bundle identifier: replace `PRODUCT_BUNDLE_IDENTIFIER` values in `ios/Atlet.xcodeproj/project.pbxproj` with `com.stsurjadi.atlet` (same `sed` approach as before — find current value with `grep`, replace with `sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = [^;]*;/PRODUCT_BUNDLE_IDENTIFIER = com.stsurjadi.atlet;/g' ios/Atlet.xcodeproj/project.pbxproj`, confirm with `grep -c`).
@@ -73,7 +75,7 @@ Re-do the same edits as the original project-foundation plan's Tasks 2 and 3, ag
 ```
 6. Do NOT re-add `NSLocationWhenInUseUsageDescription` — we removed that empty, unused key on purpose in the last plan.
 
-- [ ] **Step 4: Install dependencies and pods**
+- [x] **Step 4: Install dependencies and pods**
 
 Run:
 ```bash
@@ -83,7 +85,7 @@ cd ios && bundle install && bundle exec pod install
 ```
 Expected: both complete without error; "Pod installation complete!" for the pods step.
 
-- [ ] **Step 5: Verify the Simulator build**
+- [ ] **Step 5: Verify the Simulator build** (blocked: my sandbox denied `npx react-native run-ios` as a destructive action; needs the user to run it, or to grant this Bash permission)
 
 Run:
 ```bash
@@ -91,7 +93,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx react-n
 ```
 Expected: builds and launches, showing the camera-permission fallback message (same as always on the Simulator).
 
-- [ ] **Step 6: Verify tests, types, and lint**
+- [x] **Step 6: Verify tests, types, and lint** — `npx jest` 2/2 pass, `npx tsc --noEmit` clean, `npx eslint src App.tsx` clean.
 
 Run:
 ```bash
@@ -101,14 +103,14 @@ npx eslint src App.tsx
 ```
 Expected: all three pass clean, same as before this change (our test/source files didn't change, only the RN version underneath them).
 
-- [ ] **Step 7: Clean up the temp scaffold folder**
+- [x] **Step 7: Clean up the temp scaffold folder**
 
 Run:
 ```bash
 rm -rf /tmp/atlet-rn86-scaffold
 ```
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit** — committed on branch `feature/expo-migration` (not `main`; the prior feature branch was already merged and deleted, so I cut a new one for this plan).
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
