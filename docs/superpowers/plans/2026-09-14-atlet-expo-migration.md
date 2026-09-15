@@ -149,7 +149,7 @@ This step needs the project owner's phone and their visual confirmation, same as
 - Modify: `babel.config.js`, `metro.config.js`
 - Modify: `ios/Podfile`, `ios/Atlet/AppDelegate.swift`
 
-- [ ] **Step 1: Run the install command**
+- [x] **Step 1: Run the install command** — correctly detected SDK 56 for RN 0.85.3; confirmed the iOS deployment target bump to 16.4.
 
 Run:
 ```bash
@@ -159,7 +159,7 @@ Expected: the command completes and reports success. It will print which files i
 
 If it reports a React Native version mismatch or refuses to proceed (our project is on RN 0.87.1; the tool is documented as tested on 0.86), STOP and report BLOCKED with the exact message — don't force past a real compatibility warning.
 
-- [ ] **Step 2: Review what changed**
+- [x] **Step 2: Review what changed**
 
 Run:
 ```bash
@@ -168,7 +168,7 @@ git diff package.json babel.config.js metro.config.js ios/Podfile ios/Atlet/AppD
 ```
 Expected: `expo` appears as a new dependency in `package.json`; `babel.config.js` now uses `babel-preset-expo`; `metro.config.js` now extends `expo/metro-config`; `ios/Podfile` has a new `use_expo_modules!` line; `AppDelegate.swift` has Expo-related changes.
 
-- [ ] **Step 3: Install CocoaPods dependencies for the new native setup**
+- [x] **Step 3: Install CocoaPods dependencies for the new native setup**
 
 Run (Homebrew Ruby must be on PATH — this repo needs it for every `pod install`, a known environment fact from the last plan):
 ```bash
@@ -177,7 +177,7 @@ cd ios && bundle exec pod install
 ```
 Expected: ends with "Pod installation complete!".
 
-- [ ] **Step 4: Verify the app still builds in the Simulator**
+- [x] **Step 4: Verify the app still builds in the Simulator** — confirmed by user, also confirmed on the real iPhone.
 
 Run:
 ```bash
@@ -185,7 +185,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx react-n
 ```
 Expected: builds and launches, still showing the same camera-permission fallback message as before (Simulator has no camera — this is correct, same as the last plan).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
