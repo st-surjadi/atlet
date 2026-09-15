@@ -130,7 +130,7 @@ EOF
 )"
 ```
 
-- [ ] **Step 9: Real-device verification (do not skip — report back to the controlling session for this step, do not self-certify)**
+- [x] **Step 9: Real-device verification (do not skip — report back to the controlling session for this step, do not self-certify)** — user confirmed: app launched on the real iPhone.
 
 This step needs the project owner's phone and their visual confirmation, same as the original plan's Task 5. Report status back to the controller instead of attempting this alone if you are a subagent without a way to interact with the user directly.
 
