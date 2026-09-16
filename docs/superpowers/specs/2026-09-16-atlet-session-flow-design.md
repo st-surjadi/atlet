@@ -100,9 +100,11 @@ is also reachable directly from `Home`.
   3. Saves a session record to history (see Section 6).
   4. Navigates to History.
 - Leaving the screen any other way (back button/gesture) prompts "Discard
-  this session?". Confirming discards any in-progress recording (deletes
-  the temp file, does not save to Photos) and does not create a history
-  record. Canceling the prompt keeps the session running.
+  this session?". Confirming stops any in-progress recording and skips
+  the save-to-Photos step — the temp file is left for iOS to clean up
+  from its own cache, rather than adding a file-deletion dependency for
+  this one low-stakes edge case. No history record is created. Canceling
+  the prompt keeps the session running.
 
 ### History (`app/history.tsx`)
 
