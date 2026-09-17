@@ -1282,7 +1282,7 @@ EOF
 
 ### Task 7: Final whole-flow review
 
-- [ ] **Step 1: Run the full check suite one more time**
+- [x] **Step 1: Run the full check suite one more time**
 
 Run:
 ```bash
@@ -1293,7 +1293,7 @@ npx jest
 ```
 Expected: all pass clean.
 
-- [ ] **Step 2: Walk the whole flow once more, end to end**
+- [x] **Step 2: Walk the whole flow once more, end to end**
 
 Report back to the controlling session; do not self-certify. Ask the user to run `npx expo run:ios --device` and go through, in order: Home → History (empty or existing state) → back to Home → Start Session → Setup with Target mode + a preset count + Track Only → Session → End Session → History shows the new row → Start Session again with Free Shooting + Track & Record → Session → End Session → confirm video in Photos and the new History row → tap that row → confirm Photos opens.
 
