@@ -2,6 +2,7 @@
   "expo": {
     "name": "Atlet",
     "slug": "atlet",
+    "scheme": "atlet",
     "ios": {
       "bundleIdentifier": "com.stsurjadi.atlet",
       "infoPlist": {
@@ -14,7 +15,8 @@
         {
           "cameraPermissionText": "Atlet uses the camera to track your shots live."
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }

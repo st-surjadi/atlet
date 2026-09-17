@@ -25,7 +25,7 @@ class AppDelegate: ExpoAppDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "Atlet",
+      withModuleName: "main",
       in: window,
       launchOptions: launchOptions
     )
