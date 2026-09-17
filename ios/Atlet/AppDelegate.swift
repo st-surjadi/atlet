@@ -23,6 +23,7 @@ class AppDelegate: ExpoAppDelegate {
     reactNativeFactory = factory
 
     window = UIWindow(frame: UIScreen.main.bounds)
+    window?.backgroundColor = .black
 
     factory.startReactNative(
       withModuleName: "main",
