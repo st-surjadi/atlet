@@ -999,18 +999,20 @@ EOF
 
 ### Task 6: Track & Record video capture
 
+**Done, with three real bugs found and fixed:** (1) `expo-media-library`'s default API doesn't export `saveToLibraryAsync` at all (moved to a `/legacy` subpath in its "MediaLibraryNext" rewrite) — TypeScript silently didn't catch this (a module-resolution edge case falls back to `any`), so it compiled clean but crashed calling a nonexistent function; switched to `expo-media-library/legacy`. (2) Editing `app.json`'s `NSPhotoLibraryAddUsageDescription` never reached the native `Info.plist` — only `expo prebuild` applies `app.json`, which this step's plan text forgot to include; the OS's own crash report named the exact missing key. (3) Discarding via the swipe-back gesture hit a known react-native-screens/native-stack limitation (`beforeRemove` "is not fully supported" for the interactive gesture); since the screen had no visible back button, swipe was the only path to discard, exactly the unsupported one — fixed by disabling the gesture on this screen and adding an explicit Cancel button instead.
+
 **Files:**
 - Modify: `app/session.tsx`
 - Modify: `app.json`
 
-- [ ] **Step 1: Install expo-media-library**
+- [x] **Step 1: Install expo-media-library**
 
 Run:
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx expo install expo-media-library
 ```
 
-- [ ] **Step 2: Add the photo library permission string**
+- [x] **Step 2: Add the photo library permission string**
 
 In `app.json`, add `NSPhotoLibraryAddUsageDescription` to `ios.infoPlist`, alongside the existing camera permission:
 
@@ -1021,7 +1023,7 @@ In `app.json`, add `NSPhotoLibraryAddUsageDescription` to `ios.infoPlist`, along
       }
 ```
 
-- [ ] **Step 3: Add recording to the Session screen**
+- [x] **Step 3: Add recording to the Session screen**
 
 Replace all of `app/session.tsx` with:
 
@@ -1228,7 +1230,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 4: Reinstall pods**
+- [x] **Step 4: Reinstall pods**
 
 Run:
 ```bash
@@ -1237,7 +1239,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet/ios && bundle 
 ```
 Expected: ends with "Pod installation complete!".
 
-- [ ] **Step 5: Run the checks**
+- [x] **Step 5: Run the checks**
 
 Run:
 ```bash
@@ -1248,15 +1250,15 @@ npx jest
 ```
 Expected: all pass clean.
 
-- [ ] **Step 6: Verify Track & Record on the real device**
+- [x] **Step 6: Verify Track & Record on the real device**
 
 Report back to the controlling session; do not self-certify. Video recording needs a real camera, so this cannot be checked on the Simulator. Ask the user to run `npx expo run:ios --device` and: Home → Start Session → Setup (pick either mode, Track & Record) → Start → confirm the camera preview appears (recording starts silently, no visible indicator by design) → End Session → confirm a "Save to Photos" or similar permission prompt appears the first time → confirm the video appears in the Photos app → confirm History shows the new row and tapping it opens Photos.
 
-- [ ] **Step 7: Verify the discard path stops recording**
+- [x] **Step 7: Verify the discard path stops recording**
 
 Ask the user to start a Track & Record session, then back out and confirm "Discard." Expected: no crash, no new video appears in Photos, no new History row.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
