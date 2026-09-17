@@ -36,12 +36,14 @@ Each later task replaces one stub with real content. Track Only sessions are ful
 
 ### Task 1: Migrate to expo-router with a full route skeleton
 
+**Done, with two extra fixes needed:** (1) pinned `react-native-reanimated` to `4.5.1` (needs `worklets@0.10.x`) instead of the auto-resolved `4.6.0` (needs `worklets@0.12.x`, whose renamed API broke `expo-modules-core@56.0.25`'s native compile) — a real unpatched SDK 56 packaging gap; (2) renamed the native module from `"Atlet"` to `"main"` in `AppDelegate.swift` and `MainActivity.kt`, since every Expo-native entry path (including `expo-router`'s) always registers as `"main"` with no override. Full navigation flow (Home/Setup/Session/History stubs) verified on Simulator and real device.
+
 **Files:**
 - Create: `app/_layout.tsx`, `app/index.tsx`, `app/setup.tsx`, `app/session.tsx`, `app/history.tsx`
 - Delete: `index.js`, `App.tsx`
 - Modify: `package.json`, `app.json`
 
-- [ ] **Step 1: Install expo-router and its dependencies**
+- [x] **Step 1: Install expo-router and its dependencies**
 
 Run:
 ```bash
@@ -49,7 +51,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx expo in
 ```
 Expected: completes without error; `package.json` now lists `expo-router`, `react-native-screens`, and `expo-linking` under `dependencies`, at versions `npx expo install` picked for Expo SDK 56.
 
-- [ ] **Step 2: Set the app entry point to expo-router**
+- [x] **Step 2: Set the app entry point to expo-router**
 
 In `package.json`, add a `"main"` field (there isn't one currently). Add it right after `"private": true,`:
 
@@ -57,7 +59,7 @@ In `package.json`, add a `"main"` field (there isn't one currently). Add it righ
   "main": "expo-router/entry",
 ```
 
-- [ ] **Step 3: Add a URL scheme to app.json**
+- [x] **Step 3: Add a URL scheme to app.json**
 
 expo-router needs a scheme for its internal linking, even without deep links from outside the app. Add `"scheme": "atlet"` to `app.json`, right after `"slug": "atlet",`:
 
@@ -70,7 +72,7 @@ expo-router needs a scheme for its internal linking, even without deep links fro
     "ios": {
 ```
 
-- [ ] **Step 4: Create the root layout**
+- [x] **Step 4: Create the root layout**
 
 Create `app/_layout.tsx`:
 
@@ -83,7 +85,7 @@ export default function RootLayout(): React.JSX.Element {
 }
 ```
 
-- [ ] **Step 5: Create the real Home screen**
+- [x] **Step 5: Create the real Home screen**
 
 Create `app/index.tsx`:
 
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 6: Create stub Setup, Session, and History screens**
+- [x] **Step 6: Create stub Setup, Session, and History screens**
 
 Create `app/setup.tsx`:
 
@@ -247,14 +249,14 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 7: Delete the old entry point**
+- [x] **Step 7: Delete the old entry point**
 
 Run:
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && rm index.js App.tsx
 ```
 
-- [ ] **Step 8: Reinstall pods**
+- [x] **Step 8: Reinstall pods**
 
 Run:
 ```bash
@@ -263,7 +265,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet/ios && bundle 
 ```
 Expected: ends with "Pod installation complete!". If it fails with `ArgumentError - unknown keyword: quirks_mode`, that's the known `json` gem 3.x incompatibility fixed previously (Gemfile already pins `json < 3` — check `Gemfile` still has that line before investigating further).
 
-- [ ] **Step 9: Run the existing checks**
+- [x] **Step 9: Run the existing checks**
 
 Run:
 ```bash
@@ -274,7 +276,7 @@ npx jest
 ```
 Expected: all three pass clean. (`eslint .` now covers the new `app/` directory, replacing the old `eslint src App.tsx` invocation used before `App.tsx` existed.)
 
-- [ ] **Step 10: Verify the Simulator build — regression check for the registration bug**
+- [x] **Step 10: Verify the Simulator build — regression check for the registration bug**
 
 Report back to the controlling session for this step; do not self-certify. Ask the user to run:
 ```bash
@@ -282,7 +284,7 @@ npx expo run:ios
 ```
 Expected: the app launches cleanly showing the Home screen ("Atlet" title, two buttons). If "has not been registered" reappears, stop and re-check `package.json`'s `"main"` field and that `app/_layout.tsx` exists — don't guess further without re-reading the exact error.
 
-- [ ] **Step 11: Verify the real device build**
+- [x] **Step 11: Verify the real device build**
 
 Report back to the controlling session for this step; do not self-certify. Ask the user to run:
 ```bash
@@ -290,12 +292,12 @@ npx expo run:ios --device
 ```
 Expected: same as Step 10, on the real iPhone.
 
-- [ ] **Step 12: Verify basic navigation**
+- [x] **Step 12: Verify basic navigation**
 
 Ask the user to tap through: Home → "Start Session" → Setup stub → "Start" → Session stub → "End Session" (back to Home) → "History" → History stub → back to Home.
 Expected: all navigation works, no crashes.
 
-- [ ] **Step 13: Commit**
+- [x] **Step 13: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
