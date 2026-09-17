@@ -328,14 +328,14 @@ EOF
 - Create: `jest.setup.js`
 - Modify: `jest.config.js`
 
-- [ ] **Step 1: Install AsyncStorage**
+- [x] **Step 1: Install AsyncStorage**
 
 Run:
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && npx expo install @react-native-async-storage/async-storage
 ```
 
-- [ ] **Step 2: Wire up the official AsyncStorage jest mock**
+- [x] **Step 2: Wire up the official AsyncStorage jest mock**
 
 Create `jest.setup.js`:
 
@@ -354,7 +354,7 @@ module.exports = {
 };
 ```
 
-- [ ] **Step 3: Write the failing test**
+- [x] **Step 3: Write the failing test**
 
 Create `src/history/__tests__/sessionStorage.test.ts`:
 
@@ -406,12 +406,12 @@ describe('sessionStorage', () => {
 });
 ```
 
-- [ ] **Step 4: Run the test to verify it fails**
+- [x] **Step 4: Run the test to verify it fails**
 
 Run: `npx jest src/history`
 Expected: FAIL with "Cannot find module '../sessionStorage'".
 
-- [ ] **Step 5: Implement the storage module**
+- [x] **Step 5: Implement the storage module**
 
 Create `src/history/sessionStorage.ts`:
 
@@ -477,12 +477,12 @@ export async function saveSessionRecord(
 }
 ```
 
-- [ ] **Step 6: Run the test to verify it passes**
+- [x] **Step 6: Run the test to verify it passes**
 
 Run: `npx jest src/history`
 Expected: PASS, 3/3 tests.
 
-- [ ] **Step 7: Run the full check suite**
+- [x] **Step 7: Run the full check suite**
 
 Run:
 ```bash
@@ -493,7 +493,7 @@ npx jest
 ```
 Expected: all pass clean (now 5/5 tests total, across both test files).
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
@@ -517,7 +517,7 @@ EOF
 **Files:**
 - Modify: `app/setup.tsx`
 
-- [ ] **Step 1: Replace the stub with the real Setup screen**
+- [x] **Step 1: Replace the stub with the real Setup screen**
 
 Replace all of `app/setup.tsx` with:
 
@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 2: Run the checks**
+- [x] **Step 2: Run the checks**
 
 Run:
 ```bash
@@ -667,11 +667,11 @@ npx jest
 ```
 Expected: all pass clean.
 
-- [ ] **Step 3: Verify on the Simulator**
+- [x] **Step 3: Verify on the Simulator**
 
 Report back to the controlling session; do not self-certify. Ask the user to run `npx expo run:ios` and check: Setup screen shows Mode, Shot Count (only after picking Target), and Recording choices; Start is disabled until a valid combination is picked; tapping Start navigates to the Session stub.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
@@ -696,7 +696,7 @@ EOF
 **Files:**
 - Modify: `app/history.tsx`
 
-- [ ] **Step 1: Replace the stub with the real History screen**
+- [x] **Step 1: Replace the stub with the real History screen**
 
 Replace all of `app/history.tsx` with:
 
@@ -768,7 +768,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 2: Run the checks**
+- [x] **Step 2: Run the checks**
 
 Run:
 ```bash
@@ -779,11 +779,11 @@ npx jest
 ```
 Expected: all pass clean.
 
-- [ ] **Step 3: Verify on the Simulator**
+- [x] **Step 3: Verify on the Simulator**
 
 Report back to the controlling session; do not self-certify. Since no sessions exist yet, ask the user to confirm the History screen shows "No sessions yet." without crashing.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
@@ -806,11 +806,13 @@ EOF
 
 This makes the Track Only flow fully work end-to-end: camera preview, End Session saves a history record, and backing out asks to discard. Track & Record video capture is added in Task 6.
 
+**Done, plus three follow-ups after user testing:** (1) a white flash at all four corners during screen transitions — root cause: `expo-router`'s Stack already sets `react-native-screens`' `nativeContainerStyle` from the active navigation theme, but no theme was ever set, so it defaulted to light/white. Fixed by wrapping the Stack in `expo-router`'s own `DarkTheme` via `ThemeProvider` — no patching needed. (2) Task 2's AsyncStorage install was missing its `pod install` step, only caught once the History screen actually called it, compounded by a stale DerivedData cache masking the fix across one rebuild. (3) added swipe-to-delete on History rows per user request (`react-native-gesture-handler`'s `ReanimatedSwipeable`, already present as an unpinned transitive dependency — pinned it explicitly), with a `deleteSessionRecord` addition to the storage module.
+
 **Files:**
 - Modify: `app/session.tsx`
 - Delete: `src/screens/CameraPreviewScreen.tsx`
 
-- [ ] **Step 1: Replace the stub with the real Session screen**
+- [x] **Step 1: Replace the stub with the real Session screen**
 
 Replace all of `app/session.tsx` with:
 
@@ -949,7 +951,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 2: Delete the now-unused CameraPreviewScreen**
+- [x] **Step 2: Delete the now-unused CameraPreviewScreen**
 
 Run:
 ```bash
@@ -957,7 +959,7 @@ cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet && rm src/scre
 rmdir src/screens 2>/dev/null || true
 ```
 
-- [ ] **Step 3: Run the checks**
+- [x] **Step 3: Run the checks**
 
 Run:
 ```bash
@@ -968,11 +970,11 @@ npx jest
 ```
 Expected: all pass clean.
 
-- [ ] **Step 4: Verify the full Track Only flow on the real device**
+- [x] **Step 4: Verify the full Track Only flow on the real device**
 
 Report back to the controlling session; do not self-certify. Ask the user to run `npx expo run:ios --device` and walk through: Home → Start Session → Setup (pick Free Shooting, Track Only) → Start → Session shows the live camera feed and "Free Shooting" header → End Session → lands on History with one new row (today's date/time, "Free", placeholder tally). Then repeat starting a session and backing out without ending — confirm the "Discard this session?" prompt appears, and confirm no new History row was created after discarding.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/stevenseansurjadi/Documents/Code/Personal/Project/atlet
