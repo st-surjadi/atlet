@@ -13,8 +13,9 @@ export default function RootLayout(): React.JSX.Element {
             screenOptions={{
               headerShown: false,
               contentStyle: { backgroundColor: 'black' },
-            }}
-          />
+            }}>
+            <Stack.Screen name="session" options={{ gestureEnabled: false }} />
+          </Stack>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

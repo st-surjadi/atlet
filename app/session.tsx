@@ -5,7 +5,9 @@ import {
   Camera,
   useCameraDevice,
   useCameraPermission,
+  type VideoFile,
 } from 'react-native-vision-camera';
+import * as MediaLibrary from 'expo-media-library/legacy';
 import { hasUsableCameraDevice } from '../src/camera/hasUsableCameraDevice';
 import { saveSessionRecord } from '../src/history/sessionStorage';
 
@@ -19,11 +21,17 @@ export default function SessionScreen(): React.JSX.Element {
   const targetCount = params.targetCount
     ? Number(params.targetCount)
     : undefined;
+  const shouldRecord = params.record === 'trackAndRecord';
 
   const navigation = useNavigation();
   const router = useRouter();
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
+  const camera = React.useRef<Camera>(null);
+  const isRecording = React.useRef(false);
+  const stopResolveRef = React.useRef<((path: string | null) => void) | null>(
+    null,
+  );
   const [ending, setEnding] = React.useState(false);
 
   React.useEffect(() => {
@@ -31,6 +39,36 @@ export default function SessionScreen(): React.JSX.Element {
       requestPermission().catch(() => {});
     }
   }, [hasPermission, requestPermission]);
+
+  const handleCameraReady = () => {
+    if (shouldRecord && camera.current && !isRecording.current) {
+      isRecording.current = true;
+      camera.current.startRecording({
+        onRecordingFinished: (video: VideoFile) => {
+          isRecording.current = false;
+          stopResolveRef.current?.(video.path);
+          stopResolveRef.current = null;
+        },
+        onRecordingError: () => {
+          isRecording.current = false;
+          stopResolveRef.current?.(null);
+          stopResolveRef.current = null;
+        },
+      });
+    }
+  };
+
+  const stopRecordingIfNeeded = React.useCallback((): Promise<
+    string | null
+  > => {
+    if (!shouldRecord || !isRecording.current || !camera.current) {
+      return Promise.resolve(null);
+    }
+    return new Promise(resolve => {
+      stopResolveRef.current = resolve;
+      camera.current!.stopRecording();
+    });
+  }, [shouldRecord]);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', event => {
@@ -43,16 +81,49 @@ export default function SessionScreen(): React.JSX.Element {
         {
           text: 'Discard',
           style: 'destructive',
-          onPress: () => navigation.dispatch(event.data.action),
+          onPress: () => {
+            // Don't wait for the recording to stop: the video is being
+            // discarded either way, and awaiting here can let the native
+            // screen finish removing itself (especially on a fast swipe
+            // gesture) before this dispatch runs, desyncing JS navigation
+            // state from what's already gone natively.
+            if (shouldRecord && isRecording.current) {
+              camera.current?.stopRecording();
+            }
+            navigation.dispatch(event.data.action);
+          },
         },
       ]);
     });
     return unsubscribe;
-  }, [navigation, ending]);
+  }, [navigation, ending, shouldRecord]);
 
   const handleEndSession = async () => {
     setEnding(true);
-    await saveSessionRecord({ mode, targetCount, hasVideo: false });
+    const videoPath = await stopRecordingIfNeeded();
+
+    let hasVideo = false;
+    if (videoPath) {
+      const { status } = await MediaLibrary.requestPermissionsAsync(true);
+      if (status === 'granted') {
+        try {
+          await MediaLibrary.saveToLibraryAsync(videoPath);
+          hasVideo = true;
+        } catch {
+          Alert.alert(
+            'Could not save video',
+            'The session was still saved to History.',
+          );
+        }
+      } else {
+        Alert.alert(
+          'Could not save video',
+          'Photo library permission was not granted. The session was still saved to History.',
+        );
+      }
+    }
+
+    await saveSessionRecord({ mode, targetCount, hasVideo });
     router.replace('/history');
   };
 
@@ -77,10 +148,16 @@ export default function SessionScreen(): React.JSX.Element {
   return (
     <View style={styles.root}>
       <Camera
+        ref={camera}
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={true}
+        video={shouldRecord}
+        onInitialized={handleCameraReady}
       />
+      <Pressable style={styles.cancelButton} onPress={() => router.back()}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
+      </Pressable>
       <View style={styles.header}>
         <Text style={styles.headerText}>
           {mode === 'target' ? `Target: ${targetCount}` : 'Free Shooting'}
@@ -109,6 +186,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   text: { color: 'white', textAlign: 'center' },
+  cancelButton: {
+    position: 'absolute',
+    top: 60,
+    left: 24,
+  },
+  cancelButtonText: { color: 'white', fontSize: 16 },
   header: {
     position: 'absolute',
     top: 60,

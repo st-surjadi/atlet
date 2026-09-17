@@ -43,6 +43,9 @@ PODS:
     - ExpoModulesCore
   - ExpoLogBox (56.0.14):
     - React-Core
+  - ExpoMediaLibrary (56.0.11):
+    - ExpoModulesCore
+    - React-Core
   - ExpoModulesCore (56.0.25):
     - ExpoModulesJSI
     - hermes-engine
@@ -2247,6 +2250,7 @@ DEPENDENCIES:
   - ExpoKeepAwake (from `../node_modules/expo/node_modules/expo-keep-awake/ios`)
   - ExpoLinking (from `../node_modules/expo-linking/ios`)
   - "ExpoLogBox (from `../node_modules/@expo/log-box`)"
+  - ExpoMediaLibrary (from `../node_modules/expo-media-library/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoModulesJSI (from `../node_modules/expo-modules-jsi/apple`)
   - ExpoModulesWorklets (from `../node_modules/expo-modules-core`)
@@ -2359,6 +2363,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-linking/ios"
   ExpoLogBox:
     :path: "../node_modules/@expo/log-box"
+  ExpoMediaLibrary:
+    :path: "../node_modules/expo-media-library/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoModulesJSI:
@@ -2550,6 +2556,7 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 359c47a1d9ccc3a3c519bca6e39562cce230c5bb
   ExpoLinking: 2e7b346a5a60e1f5de25fc207a8105832bf12214
   ExpoLogBox: cdad5c9402a186574fb5924ea91df1f08ba9a98a
+  ExpoMediaLibrary: 2597e4d61e8d990bdb9013fe8dc44224f36bdb62
   ExpoModulesCore: a7ecc4165567ac3e607ccc32a4f4f166d9760c9f
   ExpoModulesJSI: abe8cd3e19c89b38c63426be235af5ef5ac9c1d1
   ExpoModulesWorklets: 19afe32682aa1d17fd0f73b3db85ae0850ed6431
@@ -2635,11 +2642,11 @@ SPEC CHECKSUMS:
   RNCMaskedView: eb2b2e538afa907f05a5848a1a1ac26092e6fec9
   RNGestureHandler: fb2375bebca8d187e54a854cd4da9f5e0b9d5f81
   RNReanimated: fcf6a8cdd698fb09a811a8d6c5bcfe36575d965d
-  RNScreens: 7118cd7715c226856125b5bece3c4d9abec90356
+  RNScreens: c1a06fd73d0581a2a28a160577be393f579662b9
   RNWorklets: f0de904d12965e1de29125e6acc7a0d65acadb43
   VisionCamera: 7187b3dac1ff3071234ead959ce311875748e14f
   Yoga: 77dfa8673de2874e1855002ae59c68b8be9b007b
 
-PODFILE CHECKSUM: a4a4817d1912553393a3d0a7409abcec91dca0a2
+PODFILE CHECKSUM: 8fff6769b3e84ff3a05c2666e1447ef89c9ffa7b
 
 COCOAPODS: 1.15.2

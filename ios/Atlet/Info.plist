@@ -27,6 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>atlet</string>
           <string>com.stsurjadi.atlet</string>
         </array>
       </dict>
@@ -44,6 +45,14 @@
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Atlet uses the camera to track your shots live.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Atlet saves your session recordings to your Photos.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your photos</string>
+    <key>NSUserActivityTypes</key>
+    <array>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
+    </array>
     <key>RCTMetroPort</key>
     <string>$(RCT_METRO_PORT)</string>
     <key>RCTNewArchEnabled</key>
