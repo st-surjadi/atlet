@@ -1,5 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getSessionRecords, saveSessionRecord } from '../sessionStorage';
+import {
+  deleteSessionRecord,
+  getSessionRecords,
+  saveSessionRecord,
+} from '../sessionStorage';
 
 beforeEach(async () => {
   await AsyncStorage.clear();
@@ -41,5 +45,21 @@ describe('sessionStorage', () => {
     expect(records).toHaveLength(2);
     expect(records[0].time).toBe('10:00');
     expect(records[1].time).toBe('09:00');
+  });
+
+  it('removes a record by id', async () => {
+    const first = await saveSessionRecord(
+      { mode: 'free', hasVideo: false },
+      new Date('2026-09-16T09:00:00'),
+    );
+    const second = await saveSessionRecord(
+      { mode: 'target', targetCount: 10, hasVideo: true },
+      new Date('2026-09-16T10:00:00'),
+    );
+
+    await deleteSessionRecord(first.id);
+
+    const records = await getSessionRecords();
+    expect(records).toEqual([second]);
   });
 });

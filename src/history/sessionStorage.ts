@@ -57,3 +57,9 @@ export async function saveSessionRecord(
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(records));
   return newRecord;
 }
+
+export async function deleteSessionRecord(id: string): Promise<void> {
+  const records = await getSessionRecords();
+  const filtered = records.filter(record => record.id !== id);
+  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+}
